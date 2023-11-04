@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Countdown Timer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+      }
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      #timer {
+        font-size: 48px;
+        padding: 15px;
+      }
+      #timeInput {
+        font-size: 16px;
+        font-weight: 800;
+        border-radius: 15px;
+        height: 40px;
+      }
+      button {
+        font-size: 16px;
+        margin: 10px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      button:hover {
+        color: aliceblue;
+        background-color: #333;
+      }
+
+      header {
+        font-size: x-large;
+        font-weight: 600;
+        font-size: 30px;
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        width: 98%;
+        border-radius: 0 0 15px 15px;
+      }
+      footer {
+        font-weight: 600;
+        font-size: 30px;
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 98%;
+        border-radius: 15px 15px 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header><p>DevCharis Timer</p></header>
+    <main>
+      <div id="timer">Time: 00:00</div>
+      <input
+        type="number"
+        id="timeInput"
+        placeholder="Enter time in minutes"
+        min="1"
+      />
+      <button id="startButton">Start</button>
+      <button id="stopButton">Stop</button>
+      <button id="resetButton">Reset</button>
+    </main>
+    <footer>
+      <p>&copy DevCharis 2023</p>
+    </footer>
+    <script>
+      let countdown;
+      let time = 0;
+      let isRunning = false;
+
+      const timerDisplay = document.getElementById("timer");
+      const timeInput = document.getElementById("timeInput");
+      const startButton = document.getElementById("startButton");
+      const stopButton = document.getElementById("stopButton");
+      const resetButton = document.getElementById("resetButton");
+
+      function displayTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainderSeconds = seconds % 60;
+        const display = `${minutes}:${
+          remainderSeconds < 10 ? "0" : ""
+        }${remainderSeconds}`;
+        timerDisplay.textContent = `Time: ${display}`;
+      }
+
+      function startTimer() {
+        if (!isRunning) {
+          time = parseInt(timeInput.value) * 60;
+          displayTime(time);
+          isRunning = true;
+          timeInput.disabled = true;
+          startButton.disabled = true;
+          stopButton.disabled = false;
+          resetButton.disabled = false;
+          countdown = setInterval(function () {
+            if (time > 0) {
+              time--;
+              displayTime(time);
+            } else {
+              clearInterval(countdown);
+              isRunning = false;
+              timeInput.disabled = false;
+              startButton.disabled = false;
+              stopButton.disabled = true;
+              resetButton.disabled = true;
+            }
+          }, 1000);
+        }
+      }
+
+      function stopTimer() {
+        isRunning = false;
+        timeInput.disabled = false;
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        resetButton.disabled = false;
+        clearInterval(countdown);
+      }
+
+      function resetTimer() {
+        stopTimer();
+        timeInput.value = "";
+        time = 0;
+        displayTime(time);
+        timeInput.disabled = false;
+        startButton.disabled = false;
+        resetButton.disabled = true;
+      }
+
+      startButton.addEventListener("click", startTimer);
+      stopButton.addEventListener("click", stopTimer);
+      resetButton.addEventListener("click", resetTimer);
+
+      displayTime(time);
+    </script>
+  </body>
+</html>
